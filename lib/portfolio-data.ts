@@ -4,6 +4,17 @@ export type ItemCategory =
   | "Research Paper"
   | "Prototype & Open Source";
 
+export type FrsLabFilter =
+  | "All"
+  | "Models"
+  | "Papers"
+  | "Open Source & Paper-to-Code";
+
+export type ArticleTopic =
+  | "Systems & Architecture"
+  | "LLMs & Fine-Tuning"
+  | "Research Notes";
+
 export interface NewsUpdate {
   id: string;
   date: string;
@@ -17,11 +28,21 @@ export interface PortfolioItem {
   title: string;
   subtitle: string;
   category: ItemCategory;
+  labType?: Exclude<FrsLabFilter, "All">;
+  articleTopic: ArticleTopic;
   tags: string[];
   summary: string;
   externalUrl: string;
   aiContext: string;
   suggestedQuestions: string[];
+  deployedIn?: {
+    projectName: string;
+    projectSlug: string;
+  };
+  poweredByLab?: {
+    labTitle: string;
+    labSlug: string;
+  }[];
   features?: string[];
   images?: string[];
   imageOnRight?: boolean;
@@ -50,29 +71,33 @@ export const LATEST_NEWS: NewsUpdate[] = [
   {
     id: "news-1",
     date: "Nov 2026",
-    badge: "New Research Paper",
-    title: "Published Preprint on Low-Latency Grammar-Constrained LoRA Routing for Multi-Agent Systems",
+    badge: "FRS LAB · Paper",
+    title:
+      "Published Preprint on Low-Latency Grammar-Constrained LoRA Routing for Multi-Agent Systems",
     articleSlug: "low-latency-intent-routing-paper",
   },
   {
     id: "news-2",
     date: "Oct 2026",
     badge: "Production Launch",
-    title: "Released DisVibe v2.4: Multi-Tenant AI Discord Agent Provisioning with S-LoRA Adapters",
-    articleSlug: "disvibe",
+    title:
+      "Launched SAIOS v3.0: Sovereign Multi-Agent Operating System Powered by FRS LAB Custom Weights",
+    articleSlug: "saios",
   },
   {
     id: "news-3",
     date: "Sep 2026",
-    badge: "Open Weights",
-    title: "Open-Sourced Custom 180M Vector Embeddings Pipeline with Triplet Margin Loss on Hugging Face",
+    badge: "FRS LAB · Weights",
+    title:
+      "Open-Sourced Custom 180M Vector Embeddings Pipeline with Triplet Margin Loss on Hugging Face",
     articleSlug: "custom-vector-embeddings-pipeline",
   },
   {
     id: "news-4",
     date: "Aug 2026",
-    badge: "Systems Prototype",
-    title: "Shipped AVX-512 & Lock-Free C++20 KV-Cache Slab Allocator for High-Throughput Inference",
+    badge: "FRS LAB · OSS",
+    title:
+      "Shipped AVX-512 & Lock-Free C++20 KV-Cache Slab Allocator for High-Throughput Inference",
     articleSlug: "cpp-kv-cache-slab-allocator",
   },
 ];
@@ -80,37 +105,105 @@ export const LATEST_NEWS: NewsUpdate[] = [
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   // 1. PRODUCTION PROJECTS
   {
+    slug: "saios",
+    title: "SAIOS",
+    subtitle: "Sovereign AI Operating System & Multi-Agent Production Platform",
+    category: "Production Project",
+    articleTopic: "Systems & Architecture",
+    tags: ["Multi-Agent OS", "Full-Stack SaaS", "MLOps", "vLLM"],
+    summary:
+      "A production multi-agent operating system that orchestrates autonomous reasoning workflows, deterministic tool execution, and hybrid vector memory powered directly by custom fine-tuned models from FRS LAB.",
+    externalUrl: "https://github.com/Ferashayan",
+    aiContext:
+      "Project SAIOS (Sovereign AI Operating System): Flagship production multi-agent platform. Uses a DAG-based supervisor runtime, Qdrant hybrid vector memory, and integrates custom models from FRS LAB including the Domain-Specific Llama-3 8B LoRA Router (38.4ms TTFT) and the C++20 KV-Cache Slab Allocator.",
+    suggestedQuestions: [
+      "How does SAIOS orchestrate multiple agents?",
+      "Which FRS LAB models are deployed inside SAIOS?",
+      "How does SAIOS prevent agent hallucinations?",
+    ],
+    poweredByLab: [
+      {
+        labTitle: "Domain-Specific LLM Classifier (LoRA/DPO)",
+        labSlug: "domain-specific-llm-classifier",
+      },
+      {
+        labTitle: "Grammar-Constrained LoRA Routing Paper",
+        labSlug: "low-latency-intent-routing-paper",
+      },
+    ],
+    images: [
+      "https://picsum.photos/seed/saios1/800/450",
+      "https://picsum.photos/seed/saios2/800/450",
+    ],
+    imageOnRight: true,
+    article: {
+      publishedDate: "October 28, 2026",
+      readTime: "7 min read",
+      authorName: "Feras",
+      authorRole: "AI Research Engineer",
+      heroImage: "https://picsum.photos/seed/saios1/1200/630",
+      heroCaption:
+        "SAIOS Control Plane: Real-time multi-agent DAG execution backed by FRS LAB custom LoRA routers.",
+      leadParagraph:
+        "Most agent frameworks treat LLMs as black-box API endpoints, chaining slow, unconstrained prompts that fail unpredictably in production. SAIOS was architected as a vertically integrated AI Operating System where the application layer, memory engine, and custom fine-tuned model weights co-design around deterministic execution.",
+      sections: [
+        {
+          heading: "Bridging FRS LAB Research into Production SaaS",
+          paragraphs: [
+            "Rather than routing every agent decision through a slow commercial frontier model, SAIOS delegates intent classification and tool parameter binding to our custom Rank-64 LoRA/DPO router trained in FRS LAB. This cuts P99 routing latency from 690ms down to 38.4ms.",
+            "Every tool invocation is governed by a finite-state grammar mask compiled directly from TypeScript and Zod schemas, guaranteeing 100% valid JSON payloads across multi-step workflows.",
+          ],
+          quote:
+            "Owning the stack from custom LoRA weights in FRS LAB up to the multi-agent orchestration UI is the only way to achieve sub-50ms agentic responsiveness.",
+        },
+        {
+          heading: "Episodic Vector Memory & Fault-Tolerant Execution",
+          paragraphs: [
+            "SAIOS maintains long-horizon context across sessions using a two-tier memory architecture: hot conversational state in Redis Streams and dense-sparse hybrid embeddings indexed in Qdrant.",
+          ],
+          bulletPoints: [
+            "38.4ms P99 intent routing via FRS LAB's fine-tuned Llama-3 8B classifier.",
+            "Deterministic DAG supervisor with automatic rollback and human-in-the-loop checkpoints.",
+            "Zero-copy C++20 KV-cache slab management for high-concurrency multi-tenant serving.",
+          ],
+        },
+      ],
+    },
+  },
+  {
     slug: "disvibe",
     title: "DisVibe",
     subtitle: "AI-Driven Community Bot Generation & Cloud Deployment SaaS",
     category: "Production Project",
+    articleTopic: "Systems & Architecture",
     tags: ["GenAI", "Full-Stack", "Product Architect"],
     summary:
       "An innovative SaaS platform that empowers communities and creators to seamlessly generate, customize, and deploy AI-driven Discord bots tailored to their specific engagement needs.",
     externalUrl: "https://github.com/Ferashayan",
     aiContext:
-      "Project DisVibe: A SaaS platform for creating AI Discord bots. Tech stack includes Next.js, Node.js, Qdrant vector databases, and fine-tuned open-weight/Gemini models. It scales using serverless functions and containerized bot instances with S-LoRA adapter pooling.",
+      "Project DisVibe: A SaaS platform for creating AI Discord bots. Tech stack includes Next.js, Node.js, Qdrant vector databases, and fine-tuned open-weight/Gemini models. It scales using serverless functions and containerized bot instances with S-LoRA adapter pooling from FRS LAB.",
     suggestedQuestions: [
       "What is the tech stack?",
       "How are the AI bots generated?",
       "How does it scale?",
     ],
-    features: [
-      "No-Code Bot Generation: Empowering communities to seamlessly build and configure custom Discord bots without writing code.",
-      "Seamless Cloud Deployment: Instant, automated hosting and scaling of live bot instances with a single click.",
-      "Advanced GenAI Capabilities: Tailoring bot behaviors, personalities, and prompt responses using cutting-edge models.",
+    poweredByLab: [
+      {
+        labTitle: "Custom Vector Embeddings Pipeline (180M)",
+        labSlug: "custom-vector-embeddings-pipeline",
+      },
     ],
     images: [
       "https://picsum.photos/seed/disvibe1/800/450",
       "https://picsum.photos/seed/disvibe2/800/450",
       "https://picsum.photos/seed/disvibe3/800/450",
     ],
-    imageOnRight: true,
+    imageOnRight: false,
     article: {
       publishedDate: "October 18, 2026",
       readTime: "6 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Full-Stack SaaS Developer",
+      authorRole: "AI Research Engineer",
       heroImage: "https://picsum.photos/seed/disvibe1/1200/630",
       heroCaption:
         "DisVibe Studio: Visual persona orchestration and single-click container deployment pipeline.",
@@ -134,14 +227,8 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
           ],
           bulletPoints: [
             "Next.js & TypeScript control studio with real-time webhook diagnostics.",
-            "Qdrant hybrid search combining dense semantic embeddings with sparse keyword matching.",
+            "Qdrant hybrid search powered by FRS LAB's 180M Custom Vector Embeddings Pipeline.",
             "Automated Docker container lifecycle management with sub-12-second cold starts.",
-          ],
-        },
-        {
-          heading: "Production Impact & Lessons Learned",
-          paragraphs: [
-            "By decoupling the Discord WebSocket multiplexer from the stateless RAG and adapter-serving workers, DisVibe sustains high guild concurrency while reducing per-bot compute overhead by 64%.",
           ],
         },
       ],
@@ -152,32 +239,38 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     title: "Srich",
     subtitle: "High-Performance Hybrid AI Search & Recommendation Engine",
     category: "Production Project",
+    articleTopic: "Systems & Architecture",
     tags: ["AI Search Engine", "MLOps", "Backend"],
     summary:
       "An advanced, high-performance AI-powered search and recommendation engine designed specifically for e-commerce platforms, utilizing hybrid search architecture to deliver hyper-relevant product discoveries.",
     externalUrl: "https://github.com/Ferashayan",
     aiContext:
-      "Project Srich: An AI search engine for e-commerce. Uses hybrid search (dense vector embeddings + sparse keyword search BM25) via Reciprocal Rank Fusion. Utilizes Qdrant for vector DB. Recommendation logic uses collaborative filtering and embedding similarity.",
+      "Project Srich: An AI search engine for e-commerce. Uses hybrid search (dense vector embeddings from FRS LAB + sparse keyword search BM25) via Reciprocal Rank Fusion. Utilizes Qdrant for vector DB and C++20 AVX-512 SIMD kernels for low-latency scoring.",
     suggestedQuestions: [
       "What makes the search hybrid?",
       "How is Qdrant/Vector DB utilized?",
       "How does the recommendation logic work?",
     ],
-    features: [
-      "Hybrid Search Architecture: Blending traditional keyword matching with deep semantic vector search for hyper-accurate discovery.",
-      "Ultra-Low Latency Performance: Optimizing real-time recommendation and retrieval pipelines specifically for e-commerce scale.",
-      "Qdrant Vector DB Integration: High-performance storage and indexing of product embedding spaces.",
+    poweredByLab: [
+      {
+        labTitle: "Custom Vector Embeddings Pipeline (180M)",
+        labSlug: "custom-vector-embeddings-pipeline",
+      },
+      {
+        labTitle: "C++20 Lock-Free Slab Allocator & SIMD Kernels",
+        labSlug: "cpp-kv-cache-slab-allocator",
+      },
     ],
     images: [
       "https://picsum.photos/seed/srich1/800/450",
       "https://picsum.photos/seed/srich2/800/450",
     ],
-    imageOnRight: false,
+    imageOnRight: true,
     article: {
       publishedDate: "September 29, 2026",
       readTime: "7 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Full-Stack SaaS Developer",
+      authorRole: "AI Research Engineer",
       heroImage: "https://picsum.photos/seed/srich1/1200/630",
       heroCaption:
         "Srich Hybrid Retrieval Pipeline: Merging dense semantic vectors with BM25 lexical precision.",
@@ -211,91 +304,40 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
       ],
     },
   },
-  {
-    slug: "awn",
-    title: "AWN",
-    subtitle: "Intelligent Document Parsing & Workflow Automation SaaS",
-    category: "Production Project",
-    tags: ["Full-Stack", "AI Integration", "SaaS"],
-    summary:
-      "A production-grade SaaS digital product built to streamline workflows and deliver intelligent automated solutions, focusing heavily on intuitive user experience and robust data handling.",
-    externalUrl: "https://github.com/Ferashayan",
-    aiContext:
-      "Project AWN: A workflow automation SaaS. Lead full-stack engineer and AI integrator. Solves manual data entry by using LLMs and constrained decoding to parse unstructured documents into strictly validated relational database schemas.",
-    suggestedQuestions: [
-      "What was your primary role?",
-      "What is the core problem AWN solves?",
-      "How is the data structured?",
-    ],
-    features: [
-      "Production-Grade SaaS Infrastructure: Engineered for robust data handling, strict security standards, and high reliability.",
-      "Automated Workflow Optimization: Intelligently streamlining continuous operations and multi-tenant processes.",
-      "Intuitively Tailored UX: Designed with deep focus on responsive interfaces and clean data visualizations.",
-    ],
-    images: [
-      "https://picsum.photos/seed/awn1/800/450",
-      "https://picsum.photos/seed/awn2/800/450",
-    ],
-    imageOnRight: true,
-    article: {
-      publishedDate: "August 14, 2026",
-      readTime: "5 min read",
-      authorName: "Feras",
-      authorRole: "AI Engineer & Full-Stack SaaS Developer",
-      heroImage: "https://picsum.photos/seed/awn1/1200/630",
-      heroCaption:
-        "AWN Workspace: Transforming unstructured multi-page documents into validated relational records.",
-      leadParagraph:
-        "Enterprise operations teams spend thousands of hours manually transcribing unstructured invoices, contracts, and logistics manifests into ERP databases. AWN automates this entire pipeline with deterministic schema validation and human-in-the-loop confidence auditing.",
-      sections: [
-        {
-          heading: "Eliminating Hallucinations in Structured Extraction",
-          paragraphs: [
-            "Using an LLM in an enterprise workflow requires more than a prompt asking for JSON. If a single numeric field or foreign key is malformed, downstream database transactions fail. In AWN, extraction pipelines enforce strict grammar-constrained schemas paired with relational integrity checks.",
-          ],
-          bulletPoints: [
-            "End-to-end document ingestion with layout-aware chunking.",
-            "Strict Zod & PostgreSQL schema validation before state commitment.",
-            "Interactive side-by-side audit UI highlighting low-confidence fields for 1-click operator review.",
-          ],
-        },
-        {
-          heading: "Engineering for Multi-Tenant Reliability",
-          paragraphs: [
-            "As lead full-stack engineer and AI integrator, I designed AWN's asynchronous job queues, role-based access control, and real-time progress telemetry so operations teams can process thousands of documents in bulk without UI blocking.",
-          ],
-        },
-      ],
-    },
-  },
 
-  // 2. ML MODELS & WEIGHTS
+  // 2. FRS LAB ITEMS (Models, Papers, Open Source & Paper-to-Code)
   {
     slug: "domain-specific-llm-classifier",
     title: "Domain-Specific LLM Classifier",
     subtitle: "Fine-Tuned Llama 3 8B with LoRA & Direct Preference Optimization",
     category: "ML Model & Weights",
-    tags: ["Fine-Tuned", "MLE", "Data Engineering", "LoRA / DPO"],
+    labType: "Models",
+    articleTopic: "LLMs & Fine-Tuning",
+    tags: ["Fine-Tuned", "Hugging Face", "LoRA / DPO"],
     summary:
-      "Fine-tuning an open-source foundational LLM on domain-specific datasets to optimize response accuracy, alignment, and sub-40ms latency for tailored business use-cases.",
+      "Fine-tuning an open-source foundational LLM on domain-specific datasets to optimize response accuracy, alignment, and sub-40ms latency for production agent routing.",
     externalUrl: "https://huggingface.co",
+    deployedIn: {
+      projectName: "SAIOS",
+      projectSlug: "saios",
+    },
     aiContext:
-      "Model: Domain-Specific LLM Classifier. Base model: Llama 3 8B. Training techniques: Rank-64 LoRA (Low-Rank Adaptation) and DPO (Direct Preference Optimization). Evaluation metrics: 96.4% F1-score, precision, recall, and 38.4ms TTFT latency.",
+      "FRS LAB Model: Domain-Specific LLM Classifier deployed in SAIOS. Base model: Llama 3 8B. Training techniques: Rank-64 LoRA (Low-Rank Adaptation) and DPO (Direct Preference Optimization). Evaluation metrics: 96.4% F1-score, precision, recall, and 38.4ms TTFT latency.",
     suggestedQuestions: [
       "What was the base model?",
       "What training techniques were used?",
-      "What were the evaluation metrics?",
+      "How is this model deployed inside SAIOS?",
     ],
     article: {
       publishedDate: "October 04, 2026",
       readTime: "8 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Researcher",
+      authorRole: "AI Research Engineer · FRS LAB",
       heroImage: "https://picsum.photos/seed/llmmodel/1200/630",
       heroCaption:
-        "Training loss and F1 convergence across Rank-64 LoRA + DPO fine-tuning runs.",
+        "Training loss and F1 convergence across Rank-64 LoRA + DPO fine-tuning runs in FRS LAB.",
       leadParagraph:
-        "General-purpose frontier models are overkill for specialized routing and domain classification tasks—introducing 600ms+ network latency and high token costs. By fine-tuning Llama 3 8B with Rank-64 LoRA and Direct Preference Optimization (DPO), we surpassed zero-shot frontier accuracy at a fraction of the latency.",
+        "General-purpose frontier models are overkill for specialized routing and domain classification tasks—introducing 600ms+ network latency and high token costs. By fine-tuning Llama 3 8B with Rank-64 LoRA and Direct Preference Optimization (DPO) in FRS LAB, we surpassed zero-shot frontier accuracy at a fraction of the latency.",
       sections: [
         {
           heading: "Dataset Curation & Hard-Negative Mining",
@@ -322,7 +364,7 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
           bulletPoints: [
             "Macro F1-Score improved from 91.8% (zero-shot baseline) to 96.4%.",
             "Median Time-To-First-Token (TTFT) reduced to 38.4ms using FP8 KV-cache quantization.",
-            "99.92% syntactic schema compliance in production pipelines.",
+            "Deployed directly in SAIOS as the primary multi-agent intent router.",
           ],
         },
       ],
@@ -333,12 +375,18 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
     title: "Custom Vector Embeddings Pipeline",
     subtitle: "180M Bi-Encoder Trained From Scratch with Triplet Margin Loss",
     category: "ML Model & Weights",
-    tags: ["Built From Scratch", "Machine Learning Engineer", "Triplet Loss"],
+    labType: "Models",
+    articleTopic: "LLMs & Fine-Tuning",
+    tags: ["Built From Scratch", "Hugging Face", "Triplet Loss"],
     summary:
-      "Architecting and training a custom neural network from the ground up, optimizing SMOTE data preprocessing pipelines, Triplet Margin loss functions, and Matryoshka layers for specialized feature extraction.",
+      "Architecting and training a custom 180M neural network from the ground up, optimizing SMOTE data preprocessing pipelines, Triplet Margin loss functions, and Matryoshka layers for specialized feature extraction.",
     externalUrl: "https://huggingface.co",
+    deployedIn: {
+      projectName: "DisVibe & Srich",
+      projectSlug: "disvibe",
+    },
     aiContext:
-      "Model: Custom Vector Embeddings Pipeline. Built from scratch to handle a proprietary, highly unbalanced dataset where off-the-shelf models failed. Data preprocessing included manifold SMOTE and custom augmentation. Optimized using Matryoshka Triplet Margin Loss.",
+      "FRS LAB Model: Custom Vector Embeddings Pipeline deployed in DisVibe and Srich. Built from scratch to handle a proprietary, highly unbalanced dataset where off-the-shelf models failed. Data preprocessing included manifold SMOTE and custom augmentation. Optimized using Matryoshka Triplet Margin Loss.",
     suggestedQuestions: [
       "Why build from scratch?",
       "How did you handle data preprocessing?",
@@ -348,12 +396,12 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
       publishedDate: "September 12, 2026",
       readTime: "7 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Researcher",
+      authorRole: "AI Research Engineer · FRS LAB",
       heroImage: "https://picsum.photos/seed/embeddings/1200/630",
       heroCaption:
         "2D UMAP projection of learned embedding clusters after Triplet Margin Loss optimization.",
       leadParagraph:
-        "Off-the-shelf embedding models like text-embedding-3-large are trained on broad web corpora. When applied to proprietary datasets with severe 1:400 class imbalance and specialized alphanumeric tokens, they suffer from representation collapse. Here is how I architected and trained a custom embedding pipeline from scratch.",
+        "Off-the-shelf embedding models like text-embedding-3-large are trained on broad web corpora. When applied to proprietary datasets with severe 1:400 class imbalance and specialized alphanumeric tokens, they suffer from representation collapse. Here is how I architected and trained a custom embedding pipeline from scratch in FRS LAB.",
       sections: [
         {
           heading: "Overcoming Extreme Class Imbalance with Manifold SMOTE",
@@ -364,7 +412,7 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
         {
           heading: "Optimizing Multi-Scale Triplet Margin Loss",
           paragraphs: [
-            "We trained a custom bidirectional transformer encoder using semi-hard negative mining with Triplet Margin Loss across nested Matryoshka dimensions (64d, 128d, 256d, 768d). This allows production vector databases to truncate vectors to 256 dimensions while retaining 99.1% recall.",
+            "We trained a custom bidirectional transformer encoder using semi-hard negative mining with Triplet Margin Loss across nested Matryoshka dimensions (64d, 128d, 256d, 768d). This allows production vector databases in DisVibe and Srich to truncate vectors to 256 dimensions while retaining 99.1% recall.",
           ],
           quote:
             "Training from scratch is justified when domain topology violates the assumptions of general web pre-training.",
@@ -372,19 +420,23 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
       ],
     },
   },
-
-  // 3. RESEARCH PAPERS & PROTOTYPES
   {
     slug: "low-latency-intent-routing-paper",
     title: "Grammar-Constrained LoRA Routing in Multi-Agent Systems",
     subtitle: "Research Paper · Preprint & Empirical Benchmark Study (2026)",
     category: "Research Paper",
-    tags: ["Research Paper", "Agentic Systems", "Constrained Decoding"],
+    labType: "Papers",
+    articleTopic: "Research Notes",
+    tags: ["arXiv Preprint", "Agentic Systems", "Constrained Decoding"],
     summary:
       "An empirical study demonstrating how hierarchy-aware 8B LoRA routers with finite-state grammar decoding reduce multi-agent orchestration latency by 94.4% compared to monolithic frontier planners.",
     externalUrl: "https://github.com/Ferashayan",
+    deployedIn: {
+      projectName: "SAIOS",
+      projectSlug: "saios",
+    },
     aiContext:
-      "Research Paper: Grammar-Constrained LoRA Routing in Multi-Agent Systems. Proves that decoupling routing topology from open-ended generation allows an 8B LoRA model with FSM logit masking to achieve 38.4ms routing latency and 96.4% tool-call F1.",
+      "FRS LAB Research Paper: Grammar-Constrained LoRA Routing in Multi-Agent Systems. Proves that decoupling routing topology from open-ended generation allows an 8B LoRA model with FSM logit masking to achieve 38.4ms routing latency and 96.4% tool-call F1. Implemented in production inside SAIOS.",
     suggestedQuestions: [
       "What is the core hypothesis of this paper?",
       "How does grammar-constrained decoding work?",
@@ -394,12 +446,12 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
       publishedDate: "November 02, 2026",
       readTime: "9 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Researcher",
+      authorRole: "AI Research Engineer · FRS LAB",
       heroImage: "https://picsum.photos/seed/researchpaper/1200/630",
       heroCaption:
         "Latency vs. Multi-Step Tool F1 pareto frontier across 8B LoRA routers and commercial APIs.",
       leadParagraph:
-        "Autoregressive reasoning traces in general-purpose LLMs consume over 80% of their token budget on redundant deliberation before selecting a tool. In this paper, we formulate multi-agent intent routing as a grammar-constrained decoding problem over fine-tuned 8B open weights.",
+        "Autoregressive reasoning traces in general-purpose LLMs consume over 80% of their token budget on redundant deliberation before selecting a tool. In this FRS LAB paper, we formulate multi-agent intent routing as a grammar-constrained decoding problem over fine-tuned 8B open weights.",
       sections: [
         {
           heading: "Abstract & Hypothesis",
@@ -415,7 +467,7 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
           bulletPoints: [
             "94.4% reduction in P99 routing latency (from 690ms to 38.4ms).",
             "+4.6% improvement in multi-tool F1 accuracy over zero-shot frontier baselines.",
-            "23x reduction in inference compute cost per 10,000 agent workflows.",
+            "23x reduction in inference compute cost per 10,000 agent workflows in SAIOS.",
           ],
         },
       ],
@@ -424,14 +476,20 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
   {
     slug: "cpp-kv-cache-slab-allocator",
     title: "C++20 Lock-Free KV-Cache Slab Allocator & SIMD Kernels",
-    subtitle: "Low-Level Systems Prototype & Open-Source Inference Tooling",
+    subtitle: "Paper-to-Code Implementation & Open-Source Inference Tooling",
     category: "Prototype & Open Source",
-    tags: ["C++20 / CUDA", "Rust FFI", "Open Source", "Systems"],
+    labType: "Open Source & Paper-to-Code",
+    articleTopic: "Systems & Architecture",
+    tags: ["C++20 / CUDA", "Rust FFI", "Paper-to-Code"],
     summary:
       "High-performance low-level systems engineering: a lock-free 64-byte aligned C++20 slab arena for paged KV-cache management and AVX-512 SIMD kernels for sparse-dense vector scoring.",
     externalUrl: "https://github.com/Ferashayan",
+    deployedIn: {
+      projectName: "SAIOS & Srich",
+      projectSlug: "saios",
+    },
     aiContext:
-      "Open-Source Systems Prototype: C++20 Lock-Free KV-Cache Slab Allocator and AVX-512 SIMD BM25/INT8 dot-product kernels. Eliminates heap allocation jitter in LLM serving hot loops (-41% P99 latency jitter) and accelerates hybrid vector scoring by 3.8x.",
+      "FRS LAB Open-Source & Paper-to-Code: C++20 Lock-Free KV-Cache Slab Allocator and AVX-512 SIMD BM25/INT8 dot-product kernels. Eliminates heap allocation jitter in LLM serving hot loops (-41% P99 latency jitter) and accelerates hybrid vector scoring by 3.8x.",
     suggestedQuestions: [
       "What memory problem does the slab allocator solve?",
       "How fast is the AVX-512 SIMD kernel?",
@@ -441,7 +499,7 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
       publishedDate: "August 22, 2026",
       readTime: "6 min read",
       authorName: "Feras",
-      authorRole: "AI Engineer & Systems Developer",
+      authorRole: "AI Research Engineer · FRS LAB",
       heroImage: "https://picsum.photos/seed/cppsystems/1200/630",
       heroCaption:
         "Cache-line aligned 64-byte slab ring buffer eliminating dynamic allocation jitter in inference hot loops.",
@@ -478,10 +536,35 @@ export function fuseRankings(denseIds: string[], sparseIds: string[], k = 60) {
   },
 ];
 
-export function getPortfolioItemBySlug(slug: string): PortfolioItem | undefined {
+export function getPortfolioItemBySlug(
+  slug: string
+): PortfolioItem | undefined {
   return PORTFOLIO_ITEMS.find((item) => item.slug === slug);
 }
 
-export function getPortfolioItemsByCategory(category: ItemCategory): PortfolioItem[] {
-  return PORTFOLIO_ITEMS.filter((item) => item.category === category);
+export function getProductionProjects(): PortfolioItem[] {
+  return PORTFOLIO_ITEMS.filter(
+    (item) => item.category === "Production Project"
+  );
+}
+
+export function getFrsLabItems(
+  filter: FrsLabFilter = "All"
+): PortfolioItem[] {
+  const labItems = PORTFOLIO_ITEMS.filter(
+    (item) => item.category !== "Production Project"
+  );
+  if (filter === "All") {
+    return labItems;
+  }
+  return labItems.filter((item) => item.labType === filter);
+}
+
+export function getArticlesByTopic(
+  topic: ArticleTopic | "All" = "All"
+): PortfolioItem[] {
+  if (topic === "All") {
+    return PORTFOLIO_ITEMS;
+  }
+  return PORTFOLIO_ITEMS.filter((item) => item.articleTopic === topic);
 }

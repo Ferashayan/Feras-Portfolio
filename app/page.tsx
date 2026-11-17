@@ -3,22 +3,19 @@ import {
   Hero,
   LatestNewsSection,
   ZigZagProjectCard,
-  InteractiveTopicCard,
+  FrsLabSection,
+  HomeArticlesPreviewSection,
 } from "@/components/PortfolioComponents";
 import { ParticleBackground } from "@/components/ParticleBackground";
 import {
   LATEST_NEWS,
-  getPortfolioItemsByCategory,
+  PORTFOLIO_ITEMS,
+  getProductionProjects,
 } from "@/lib/portfolio-data";
+import Link from "next/link";
 
 export default function Page() {
-  const productionProjects = getPortfolioItemsByCategory("Production Project");
-  const mlModels = getPortfolioItemsByCategory("ML Model & Weights");
-  const researchPapers = getPortfolioItemsByCategory("Research Paper");
-  const systemsPrototypes = getPortfolioItemsByCategory(
-    "Prototype & Open Source"
-  );
-  const researchAndPrototypes = [...researchPapers, ...systemsPrototypes];
+  const productionProjects = getProductionProjects();
 
   return (
     <main className="min-h-screen font-sans relative">
@@ -30,16 +27,22 @@ export default function Page() {
       {/* Top Latest News & Milestones Section */}
       <LatestNewsSection items={LATEST_NEWS} />
 
-      {/* Production Projects */}
+      {/* 1. Production Projects (SAIOS, DisVibe, Srich) */}
       <section id="projects" className="py-20 px-6 max-w-7xl mx-auto">
         <div className="mb-12 text-center md:text-left">
           <h2 className="text-3xl font-bold text-white mb-3">
             Production Projects
           </h2>
           <p className="text-neutral-400 max-w-2xl text-lg">
-            Live applications demonstrating scalable full-stack architecture and
-            GenAI integration. Click any card to read the full Medium-style
-            article or chat directly with its AI agent.
+            Live multi-agent and full-stack systems operating in production,
+            powered directly by models and kernels developed in{" "}
+            <a
+              href="#frs-lab"
+              className="text-indigo-400 hover:text-indigo-300 font-medium underline underline-offset-4"
+            >
+              FRS LAB
+            </a>
+            .
           </p>
         </div>
 
@@ -50,58 +53,51 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ML Models & Engineering */}
-      <section
-        id="models"
-        className="py-20 px-6 max-w-7xl mx-auto border-t border-neutral-900"
-      >
-        <div className="mb-12 text-center md:text-left">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            ML Models &amp; Engineering
-          </h2>
-          <p className="text-neutral-400 max-w-2xl text-lg">
-            Custom model architectures, fine-tuning pipelines, and low-level AI
-            systems. Ask the dedicated chatbot on each card or click to read the
-            full technical article.
+      {/* 2. FRS LAB (Unified R&D Wing with All | Models | Papers | Open Source & Paper-to-Code Filter Pills) */}
+      <FrsLabSection />
+
+      {/* 3. Mini Preview of Latest 3 Articles at the bottom of Home Page */}
+      <HomeArticlesPreviewSection articles={PORTFOLIO_ITEMS} />
+
+      {/* Footer & Contact Bar */}
+      <footer className="py-12 px-6 border-t border-neutral-900">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-500 text-sm">
+          <p>
+            &copy; {new Date().getFullYear()} Feras — AI Research Engineer &amp;
+            Full-Stack Builder.
           </p>
+          <div className="flex flex-wrap items-center gap-5 text-xs font-mono">
+            <a
+              href="https://github.com/Ferashayan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://huggingface.co"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Hugging Face
+            </a>
+            <Link
+              href="/articles"
+              className="hover:text-white transition-colors"
+            >
+              Articles (/articles)
+            </Link>
+            <a
+              href="mailto:ferashayan200@gmail.com"
+              className="hover:text-white transition-colors"
+            >
+              ferashayan200@gmail.com
+            </a>
+          </div>
         </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {mlModels.map((model) => (
-            <InteractiveTopicCard key={model.slug} item={model} />
-          ))}
-        </div>
-      </section>
-
-      {/* Research Papers & Systems Prototypes */}
-      <section
-        id="research"
-        className="py-20 px-6 max-w-7xl mx-auto border-t border-neutral-900"
-      >
-        <div className="mb-12 text-center md:text-left">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Research Papers &amp; Open-Source Prototypes
-          </h2>
-          <p className="text-neutral-400 max-w-2xl text-lg">
-            Empirical research benchmarks, memory allocators, and systems
-            contributions. Click any card for the full Medium-style breakdown.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {researchAndPrototypes.map((item) => (
-            <InteractiveTopicCard key={item.slug} item={item} />
-          ))}
-        </div>
-      </section>
-
-      <footer className="py-12 text-center text-neutral-600 text-sm border-t border-neutral-900">
-        <p>
-          &copy; {new Date().getFullYear()} Feras — AI Engineer Portfolio. Built
-          with Next.js, Tailwind &amp; Gemini API.
-        </p>
       </footer>
     </main>
   );
 }
-

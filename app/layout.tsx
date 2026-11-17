@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} dark scroll-smooth`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} dark`}
       suppressHydrationWarning
     >
       <body

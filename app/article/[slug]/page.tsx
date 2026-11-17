@@ -50,14 +50,14 @@ export default async function ArticlePage({
               className="inline-flex items-center gap-2 text-sm font-medium text-neutral-400 hover:text-white transition-colors"
             >
               <ArrowLeft size={17} />
-              <span>Back to Portfolio</span>
+              <span>Portfolio</span>
             </Link>
-            <span className="text-neutral-800">|</span>
+            <span className="text-neutral-800">/</span>
             <Link
-              href="/"
-              className="font-sans font-bold text-neutral-100 tracking-tight text-sm uppercase"
+              href="/articles"
+              className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
             >
-              FERAS.AI
+              Articles
             </Link>
           </div>
 
@@ -84,11 +84,22 @@ export default async function ArticlePage({
 
       {/* Main Medium-style Single-Column Editorial Container */}
       <article className="max-w-[740px] mx-auto px-6 pt-12 pb-20">
-        {/* Category Pill & Tags */}
+        {/* Category Pill, Topic & Cross-Link Badges */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
           <span className="px-3 py-1 bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-mono uppercase tracking-wider rounded-full">
-            {item.category}
+            {item.labType ? `FRS LAB · ${item.labType}` : item.category}
           </span>
+          <span className="px-3 py-1 bg-neutral-900 border border-neutral-800 text-neutral-300 text-xs font-mono rounded-full">
+            {item.articleTopic}
+          </span>
+          {item.deployedIn && (
+            <Link
+              href={`/article/${item.deployedIn.projectSlug}`}
+              className="px-3 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-mono rounded-full transition-colors"
+            >
+              Deployed in {item.deployedIn.projectName} →
+            </Link>
+          )}
           {item.tags.map((tag) => (
             <span
               key={tag}
@@ -104,9 +115,27 @@ export default async function ArticlePage({
           {item.title}: {item.subtitle}
         </h1>
 
-        <p className="text-lg sm:text-xl text-neutral-400 leading-relaxed mb-8 font-normal">
+        <p className="text-lg sm:text-xl text-neutral-400 leading-relaxed mb-6 font-normal">
           {item.summary}
         </p>
+
+        {item.poweredByLab && item.poweredByLab.length > 0 && (
+          <div className="mb-8 p-4 rounded-xl bg-neutral-900/50 border border-neutral-800 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 mr-1">
+              Powered by FRS LAB:
+            </span>
+            {item.poweredByLab.map((lab) => (
+              <Link
+                key={lab.labSlug}
+                href={`/article/${lab.labSlug}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 text-xs text-cyan-300 transition-colors"
+              >
+                <span>{lab.labTitle}</span>
+                <ArrowRight size={12} />
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Medium Author Byline Bar */}
         <div className="flex items-center justify-between py-4 border-y border-neutral-900 mb-10">
